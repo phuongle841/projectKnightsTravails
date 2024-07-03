@@ -34,12 +34,10 @@ class graph {
   addEdge(start, end, weight) {
     this.adjMat[start][end] = weight;
     // this is for un-direction
-    // this.adjMat[(start, end)] = weight;
+    this.adjMat[start][end] = weight;
   }
-  path() {
-    console.log(Infinity > Infinity);
-
-    let startTree = 2;
+  path(start, end) {
+    let startTree = start;
     this.vertexList[startTree].isInTree = true;
     this.nTree = 1;
     for (let j = 0; j < this.nVertex; j++) {
@@ -61,7 +59,7 @@ class graph {
       this.nTree++;
       this.adjust_sPath();
     }
-    this.displayPaths();
+    this.displayPaths(start, end);
     this.nTree = 0;
     for (let i = 0; i < this.nVertex; i++) {
       this.vertexList[i].isInTree = false;
@@ -95,43 +93,20 @@ class graph {
       column++;
     }
   }
-  displayPaths() {
+  displayPaths(start, end) {
+    console.log(this.sPath);
     for (let i = 0; i < this.nVertex; i++) {
-      if (this.sPath[i].distance == Infinity) {
-        console.log(this.vertexList[i].number, this.sPath[i].distance);
-        console.log("inf");
-      } else {
-        console.log(this.vertexList[i].number, this.sPath[i].distance);
-        let parent = this.vertexList[this.sPath[i].parentVert].number;
-        console.log(parent);
-      }
+      let parent = this.vertexList[this.sPath[i].parentVert].number;
+      console.log(this.vertexList[i].number, this.sPath[i].distance, parent);
     }
+    let res = [];
+    let parent = end;
+    while (parent != start) {
+      res.push(parent);
+      parent = this.sPath[parent].parentVert;
+    }
+    res.push(start);
+    console.log(res);
   }
 }
-const myGraph = new graph();
-myGraph.addVertex("A");
-myGraph.addVertex("B");
-myGraph.addVertex("C");
-myGraph.addVertex("D");
-myGraph.addVertex("E");
-
-myGraph.addEdge(0, 1, 5);
-myGraph.addEdge(0, 3, 8);
-myGraph.addEdge(1, 2, 6);
-myGraph.addEdge(1, 3, 9);
-myGraph.addEdge(2, 4, 4);
-myGraph.addEdge(3, 2, 2);
-myGraph.addEdge(3, 4, 7);
-myGraph.addEdge(4, 1, 5);
-// myGraph.addEdge(0, 3, 1);
-// myGraph.addEdge(1, 2, 1);
-// myGraph.addEdge(1, 3, 1);
-// myGraph.addEdge(2, 4, 1);
-// myGraph.addEdge(3, 2, 1);
-// myGraph.addEdge(3, 4, 1);
-// myGraph.addEdge(4, 1, 1);
-myGraph.path();
-
-// there is two path to go:
-// the first one is using coordinate and object to store the adjMax
-// the second is using the number then translate that number back to coordinate later
+module.exports.graph = graph;
