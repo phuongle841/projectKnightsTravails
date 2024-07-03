@@ -2,8 +2,7 @@ const { vertex } = require("./vertex");
 const { DistPar } = require("./DistPar");
 
 class graph {
-  maxVertex = 9;
-  INFINITY = Infinity;
+  maxVertex = 20;
   vertexList; // list of vertexes
   adjMat; // adjacency matrix
   nVertex; // current number of vertices
@@ -13,15 +12,15 @@ class graph {
   startToCurrent;
   constructor() {
     this.vertexList = [];
-    this.nVertex = 0;
     this.adjMat = [];
+    this.nVertex = 0;
     this.nTree = 0;
 
     for (let i = 0; i < this.maxVertex; i++) {
       this.adjMat[i] = [];
       for (let j = 0; j < this.maxVertex; j++) {
         this.adjMat[i].push([]);
-        this.adjMat[i][j] = 0;
+        this.adjMat[i][j] = Infinity;
       }
     }
     this.sPath = [];
@@ -33,14 +32,15 @@ class graph {
     this.vertexList[this.nVertex++] = new vertex(lab);
   }
   addEdge(start, end, weight) {
-    this.adjMat[(start, end)] = weight;
+    this.adjMat[start][end] = weight;
     // this is for un-direction
     // this.adjMat[(start, end)] = weight;
   }
   path() {
-    let startTree = 0;
+    console.log(Infinity > Infinity);
+
+    let startTree = 2;
     this.vertexList[startTree].isInTree = true;
-    console.log(this.vertexList[startTree]);
     this.nTree = 1;
     for (let j = 0; j < this.nVertex; j++) {
       let tempDist = this.adjMat[startTree][j];
@@ -59,7 +59,9 @@ class graph {
       }
       this.vertexList[this.currentVert].isInTree = true;
       this.nTree++;
+      this.adjust_sPath();
     }
+    this.displayPaths();
     this.nTree = 0;
     for (let i = 0; i < this.nVertex; i++) {
       this.vertexList[i].isInTree = false;
@@ -74,7 +76,7 @@ class graph {
         indexMin = i;
       }
     }
-    return minDist;
+    return indexMin;
   }
   adjust_sPath() {
     let column = 1;
@@ -94,16 +96,16 @@ class graph {
     }
   }
   displayPaths() {
-    console.log(this.vertexList);
     for (let i = 0; i < this.nVertex; i++) {
-      // console.log(this.vertexList[i] + " =");
-      // if (this.sPath[i].distance == Infinity) {
-      //   console.log("inf");
-      // } else {
-      //   console.log(this.sPath[i].distance);
-      // }
+      if (this.sPath[i].distance == Infinity) {
+        console.log(this.vertexList[i].number, this.sPath[i].distance);
+        console.log("inf");
+      } else {
+        console.log(this.vertexList[i].number, this.sPath[i].distance);
+        let parent = this.vertexList[this.sPath[i].parentVert].number;
+        console.log(parent);
+      }
     }
-    console.log();
   }
 }
 const myGraph = new graph();
@@ -113,16 +115,23 @@ myGraph.addVertex("C");
 myGraph.addVertex("D");
 myGraph.addVertex("E");
 
-myGraph.addEdge(0, 1, 1);
-myGraph.addEdge(0, 3, 1);
-myGraph.addEdge(1, 2, 1);
-myGraph.addEdge(1, 3, 1);
-myGraph.addEdge(2, 4, 1);
-myGraph.addEdge(3, 2, 1);
-myGraph.addEdge(3, 4, 1);
-myGraph.addEdge(4, 1, 1);
+myGraph.addEdge(0, 1, 5);
+myGraph.addEdge(0, 3, 8);
+myGraph.addEdge(1, 2, 6);
+myGraph.addEdge(1, 3, 9);
+myGraph.addEdge(2, 4, 4);
+myGraph.addEdge(3, 2, 2);
+myGraph.addEdge(3, 4, 7);
+myGraph.addEdge(4, 1, 5);
+// myGraph.addEdge(0, 3, 1);
+// myGraph.addEdge(1, 2, 1);
+// myGraph.addEdge(1, 3, 1);
+// myGraph.addEdge(2, 4, 1);
+// myGraph.addEdge(3, 2, 1);
+// myGraph.addEdge(3, 4, 1);
+// myGraph.addEdge(4, 1, 1);
+myGraph.path();
 
-myGraph.displayPaths();
 // there is two path to go:
 // the first one is using coordinate and object to store the adjMax
 // the second is using the number then translate that number back to coordinate later
