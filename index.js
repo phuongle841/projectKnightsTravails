@@ -28,9 +28,19 @@ class buildScript {
     myGraph.addEdge(7, 2, 1);
     myGraph.addEdge(8, 1, 1);
     myGraph.addEdge(8, 3, 1);
-
-    // find path from D
-    myGraph.path(1, 2);
+    for (let i = 0; i < 64; i++) {
+      console.log(this.unTranslator(this.translator(i)));
+    }
+    myGraph.path(1, 2).forEach((element) => {
+      console.log(element);
+      console.log(this.translator(element));
+    });
+  }
+  translator(number) {
+    return [number % 8, (number - (number % 8)) / 8];
+  }
+  unTranslator(coordinate) {
+    return 8 * coordinate[1] + coordinate[0];
   }
 }
 let script = new buildScript();

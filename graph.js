@@ -59,11 +59,12 @@ class graph {
       this.nTree++;
       this.adjust_sPath();
     }
-    this.displayPaths(start, end);
+    let res = this.displayPaths(start, end);
     this.nTree = 0;
     for (let i = 0; i < this.nVertex; i++) {
       this.vertexList[i].isInTree = false;
     }
+    return res;
   }
   getMin() {
     let minDist = Infinity;
@@ -94,10 +95,10 @@ class graph {
     }
   }
   displayPaths(start, end) {
-    console.log(this.sPath);
     for (let i = 0; i < this.nVertex; i++) {
       let parent = this.vertexList[this.sPath[i].parentVert].number;
-      console.log(this.vertexList[i].number, this.sPath[i].distance, parent);
+      // to display the table
+      // console.log(this.vertexList[i].number, this.sPath[i].distance, parent);
     }
     let res = [];
     let parent = end;
@@ -106,7 +107,7 @@ class graph {
       parent = this.sPath[parent].parentVert;
     }
     res.push(start);
-    console.log(res);
+    return res;
   }
 }
 module.exports.graph = graph;
