@@ -2,7 +2,7 @@ const { vertex } = require("./vertex");
 const { DistPar } = require("./DistPar");
 
 class graph {
-  maxVertex = 20;
+  maxVertex = 64;
   vertexList; // list of vertexes
   adjMat; // adjacency matrix
   nVertex; // current number of vertices
@@ -97,8 +97,6 @@ class graph {
   displayPaths(start, end) {
     for (let i = 0; i < this.nVertex; i++) {
       let parent = this.vertexList[this.sPath[i].parentVert].number;
-      // to display the table
-      // console.log(this.vertexList[i].number, this.sPath[i].distance, parent);
     }
     let res = [];
     let parent = end;

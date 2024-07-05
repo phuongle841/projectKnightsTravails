@@ -1,40 +1,24 @@
 const { graph } = require("./graph");
 class buildScript {
-  run() {
+  run(coordinateX, coordinateY) {
+    let x = this.unTranslator(coordinateX);
+    let y = this.unTranslator(coordinateY);
     const myGraph = new graph();
-    myGraph.addVertex("A");
-    myGraph.addVertex("B");
-    myGraph.addVertex("C");
-    myGraph.addVertex("D");
-    myGraph.addVertex("E");
-    myGraph.addVertex("F");
-    myGraph.addVertex("G");
-    myGraph.addVertex("H");
-    myGraph.addVertex("I");
-
-    myGraph.addEdge(0, 7, 1);
-    myGraph.addEdge(0, 5, 1);
-    myGraph.addEdge(1, 6, 1);
-    myGraph.addEdge(1, 8, 1);
-    myGraph.addEdge(2, 7, 1);
-    myGraph.addEdge(2, 3, 1);
-    myGraph.addEdge(3, 8, 1);
-    myGraph.addEdge(3, 2, 1);
-    myGraph.addEdge(5, 6, 1);
-    myGraph.addEdge(5, 0, 1);
-    myGraph.addEdge(6, 1, 1);
-    myGraph.addEdge(6, 5, 1);
-    myGraph.addEdge(7, 0, 1);
-    myGraph.addEdge(7, 2, 1);
-    myGraph.addEdge(8, 1, 1);
-    myGraph.addEdge(8, 3, 1);
     for (let i = 0; i < 64; i++) {
-      console.log(this.unTranslator(this.translator(i)));
+      myGraph.addVertex(i);
     }
-    myGraph.path(1, 2).forEach((element) => {
-      console.log(element);
-      console.log(this.translator(element));
-    });
+    for (let i = 0; i < 64; i++) {
+      let adjList = this.genAdjVertexes(this.translator(i));
+      adjList.forEach((Des) => {
+        myGraph.addEdge(i, this.unTranslator(Des), 1);
+      });
+    }
+    myGraph
+      .path(x, y)
+      .reverse()
+      .forEach((value) => {
+        console.log(this.translator(value));
+      });
   }
   translator(number) {
     return [number % 8, (number - (number % 8)) / 8];
@@ -42,9 +26,28 @@ class buildScript {
   unTranslator(coordinate) {
     return 8 * coordinate[1] + coordinate[0];
   }
+  genAdjVertexes(coordinate) {
+    let n = [coordinate[0] + 1, coordinate[1] + 2];
+    let s = [coordinate[0] - 1, coordinate[1] - 2];
+    let w = [coordinate[0] - 2, coordinate[1] + 1];
+    let e = [coordinate[0] + 2, coordinate[1] - 1];
+    let ne = [coordinate[0] + 2, coordinate[1] + 1];
+    let se = [coordinate[0] + 1, coordinate[1] - 2];
+    let sw = [coordinate[0] - 2, coordinate[1] - 1];
+    let nw = [coordinate[0] - 1, coordinate[1] + 2];
+    let procedure = [];
+    procedure.push(n, s, w, e, ne, se, sw, nw);
+    let res = procedure.filter((coordinate) => this.testCoord(coordinate));
+    return res;
+  }
+  testCoord(coordinate) {
+    return (
+      coordinate[0] > -1 &&
+      coordinate[0] < 8 &&
+      coordinate[1] > -1 &&
+      coordinate[1] < 8
+    );
+  }
 }
-let script = new buildScript();
-script.run();
-// there is two path to go:
-// the first one is using coordinate and object to store the adjMax
-// the second is using the number then translate that number back to coordinate later
+
+module.exports.buildScript = buildScript;
